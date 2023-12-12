@@ -17,7 +17,7 @@ import java.util.HashMap;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final static HashMap<Integer, User> users = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
     private int id = 1;
 
     @PostMapping
