@@ -18,7 +18,7 @@ import java.util.HashMap;
 @Slf4j
 public class UserController {
     private final static HashMap<Integer, User> users = new HashMap<>();
-    private static int id = 1;
+    private int id = 1;
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult errors) {

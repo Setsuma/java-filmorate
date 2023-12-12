@@ -18,7 +18,7 @@ import java.util.HashMap;
 @Slf4j
 public class FilmController {
     private final static HashMap<Integer, Film> films = new HashMap<>();
-    private static int id = 1;
+    private int id = 1;
 
     @PostMapping
     public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film, BindingResult errors) {
