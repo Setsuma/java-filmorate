@@ -3,17 +3,25 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 @WebMvcTest(FilmController.class)
 public class FilmControllerValidationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private InMemoryFilmStorage filmStorage;
+    @MockBean
+    private FilmService filmService;
 
     @Test
     public void addFilm_ValidData_Returns200() throws Exception {
@@ -130,5 +138,4 @@ public class FilmControllerValidationTest {
                         .content(filmJson))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
 }
