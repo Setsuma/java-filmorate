@@ -16,7 +16,7 @@ public class User {
     @Pattern(regexp = "^\\S*$", message = "в логине не может быть пробелов")
     private String login;
     @Nullable
-    private String name = "";
+    private String name;
     @NotEmpty(message = "электронная почта не может быть пустой")
     @Email(message = "адрес электронный почты не соответствует формату Email")
     private String email;

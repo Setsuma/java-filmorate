@@ -2,11 +2,8 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.exceptions.IdNotFoundException;
-import ru.yandex.practicum.filmorate.controller.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -21,11 +18,7 @@ public class UserController {
     private int id = 1;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult errors) {
-        if (errors.hasErrors()) {
-            FieldError error = errors.getFieldError();
-            throw new ValidationException(error.getDefaultMessage());
-        }
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         createUserNameFromLoginIfNotExists(user);
         user.setId(id);
         users.put(id++, user);
@@ -34,12 +27,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user, BindingResult errors) {
-        if (errors.hasErrors()) {
-            FieldError error = errors.getFieldError();
-            throw new ValidationException(error.getDefaultMessage());
-        }
-
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
         if (users.containsKey(user.getId())) {
             createUserNameFromLoginIfNotExists(user);
             users.put(user.getId(), user);
@@ -57,6 +45,6 @@ public class UserController {
     }
 
     private void createUserNameFromLoginIfNotExists(User user) {
-        if (user.getName().isBlank()) user.setName(user.getLogin());
+        if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
     }
 }

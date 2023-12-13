@@ -2,11 +2,8 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.exceptions.IdNotFoundException;
-import ru.yandex.practicum.filmorate.controller.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -21,12 +18,7 @@ public class FilmController {
     private int id = 1;
 
     @PostMapping
-    public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film, BindingResult errors) {
-        if (errors.hasErrors()) {
-            FieldError error = errors.getFieldError();
-            throw new ValidationException(error.getDefaultMessage());
-        }
-
+    public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film) {
         film.setId(id);
         films.put(id++, film);
         log.info("Добавлен новый фильм: " + film);
@@ -34,12 +26,7 @@ public class FilmController {
     }
 
     @PutMapping()
-    public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film, BindingResult errors) {
-        if (errors.hasErrors()) {
-            FieldError error = errors.getFieldError();
-            throw new ValidationException(error.getDefaultMessage());
-        }
-
+    public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
             log.info("Фильм обновлен: " + film);
