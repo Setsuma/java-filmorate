@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -16,6 +17,22 @@ import java.util.*;
 public class FilmService {
     private final InMemoryFilmStorage filmStorage;
     private final InMemoryUserStorage userStorage;
+
+    public Film addFilm(Film film) {
+        return filmStorage.add(film);
+    }
+
+    public Film updateFilm(Film film) {
+        return filmStorage.update(film);
+    }
+
+    public Film getFilmById(int id) {
+        return filmStorage.getById(id);
+    }
+
+    public Collection<Film> getAllFilms() {
+        return filmStorage.getAll();
+    }
 
     public void likeFilm(int filmId, int userId) {
         checkFilmId(filmId);
@@ -32,24 +49,23 @@ public class FilmService {
     }
 
     public Collection<Film> getPopularFilms(int count) {
-        if (filmStorage.getAll().size() == 0 || count < 1) return Collections.emptyList();
-        if (count > filmStorage.getAll().size()) count = filmStorage.getAll().size();
-        List<Film> topFilms = new ArrayList<>(filmStorage.getAll());
+        List<Film> films = new ArrayList<>(filmStorage.getAll());
 
-        topFilms.sort((o1, o2) -> o2.getUsersWhoLikedFilmIds().size() - o1.getUsersWhoLikedFilmIds().size());
+        List<Film> topFilms = films.stream()
+                .sorted((o1, o2) -> o2.getUsersWhoLikedFilmIds().size() - o1.getUsersWhoLikedFilmIds().size())
+                .limit(Math.min(count, films.size()))
+                .collect(Collectors.toList());
 
         log.info("получен запрос на получение топ " + count + " фильмов");
 
-        return topFilms.subList(0, count);
+        return topFilms;
     }
 
-    private void checkUserId(int userId) {
-        if (!userStorage.getAllWithIds().containsKey(userId))
-            throw new IdNotFoundException("Пользователь с данным id не найден");
+    private void checkUserId(int userId) throws IdNotFoundException {
+        filmStorage.getById(userId);
     }
 
-    private void checkFilmId(int filmId) {
-        if (!filmStorage.getAllWithIds().containsKey(filmId))
-            throw new IdNotFoundException("Фильм с данным id не найден");
+    private void checkFilmId(int filmId) throws IdNotFoundException {
+        filmStorage.getById(filmId);
     }
 }

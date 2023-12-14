@@ -13,6 +13,4 @@ public interface Storage<T> {
     T getById(int id);
 
     Collection<T> getAll();
-
-    Map<Integer, T> getAllWithIds();
 }

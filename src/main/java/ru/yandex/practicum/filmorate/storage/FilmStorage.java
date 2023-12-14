@@ -15,6 +15,4 @@ public interface FilmStorage extends Storage<Film> {
     Film getById(int id);
 
     Collection<Film> getAll();
-
-    Map<Integer, Film> getAllWithIds();
 }

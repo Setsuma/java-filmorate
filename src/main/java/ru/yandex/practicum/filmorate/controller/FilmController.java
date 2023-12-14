@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -14,27 +13,26 @@ import java.util.Collection;
 @AllArgsConstructor
 @RequestMapping("/films")
 public class FilmController {
-    private final InMemoryFilmStorage filmStorage;
     private final FilmService filmService;
 
     @PostMapping
     public ResponseEntity<Film> addFilm(@Valid @RequestBody Film film) {
-        return ResponseEntity.ok(filmStorage.add(film));
+        return ResponseEntity.ok(filmService.addFilm(film));
     }
 
     @PutMapping()
     public ResponseEntity<Film> updateFilm(@Valid @RequestBody Film film) {
-        return ResponseEntity.ok(filmStorage.update(film));
+        return ResponseEntity.ok(filmService.updateFilm(film));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Film> getFilmById(@PathVariable int id) {
-        return ResponseEntity.ok(filmStorage.getById(id));
+        return ResponseEntity.ok(filmService.getFilmById(id));
     }
 
     @GetMapping
     public ResponseEntity<Collection<Film>> getAllFilms() {
-        return ResponseEntity.ok(filmStorage.getAll());
+        return ResponseEntity.ok(filmService.getAllFilms());
     }
 
     @PutMapping("/{id}/like/{userId}")

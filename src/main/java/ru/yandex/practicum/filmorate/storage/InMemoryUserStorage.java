@@ -63,11 +63,6 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values();
     }
 
-    @Override
-    public HashMap<Integer, User> getAllWithIds() {
-        return new HashMap<>(users);
-    }
-
     private void createUserNameFromLoginIfNotExists(User user) {
         if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
     }

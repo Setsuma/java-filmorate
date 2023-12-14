@@ -60,9 +60,4 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.info("Был выполнен запрос на получение всех фильмов");
         return films.values();
     }
-
-    @Override
-    public HashMap<Integer, Film> getAllWithIds() {
-        return new HashMap<>(films);
-    }
 }

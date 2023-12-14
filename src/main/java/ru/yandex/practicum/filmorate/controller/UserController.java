@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -14,27 +13,26 @@ import java.util.Collection;
 @AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-    private final InMemoryUserStorage userStorage;
     private final UserService userService;
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userStorage.add(user));
+        return ResponseEntity.ok(userService.addUser(user));
     }
 
     @PutMapping
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userStorage.update(user));
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
-        return ResponseEntity.ok(userStorage.getById(id));
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping
     public ResponseEntity<Collection<User>> getAllUsers() {
-        return ResponseEntity.ok(userStorage.getAll());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PutMapping("/{id}/friends/{friendId}")

@@ -15,6 +15,4 @@ public interface UserStorage extends Storage<User> {
     User getById(int id);
 
     Collection<User> getAll();
-
-    Map<Integer, User> getAllWithIds();
 }
