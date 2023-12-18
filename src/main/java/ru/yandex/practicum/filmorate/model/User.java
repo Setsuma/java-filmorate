@@ -1,19 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
 
-import javax.management.ConstructorParameters;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
     private int id;
     @NotEmpty(message = "логин не может быть пустым")
@@ -26,13 +26,4 @@ public class User {
     private String email;
     @PastOrPresent(message = "дата рождения не может быть в будущем")
     private LocalDate birthday;
-    private final Set<Integer> friendsId = new HashSet<>();
-
-    public User(int id, String login, String name, String email, Date birthday) {
-this.id = id;
-this.login= login;
-this.name = name;
-this.email = email;
-this.birthday = birthday.toLocalDate();
-    }
 }

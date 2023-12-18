@@ -29,7 +29,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void remove(User user) {
-        jdbcTemplate.update("DELETE FROM users WHERE id = ?", user.getId());
+        if (jdbcTemplate.update("DELETE FROM users WHERE id = ?", user.getId()) == 0) throw new EmptyResultDataAccessException(1);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserDbStorage implements UserStorage {
                 rs.getString("login"),
                 rs.getString("name"),
                 rs.getString("email"),
-                rs.getDate("birthday")
+                rs.getDate("birthday").toLocalDate()
         );
     }
 
