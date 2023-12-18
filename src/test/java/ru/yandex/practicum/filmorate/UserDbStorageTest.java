@@ -18,7 +18,7 @@ class UserDbStorageTest {
     private final JdbcTemplate jdbcTemplate;
 
     @Test
-    public void AddUser() {
+    public void addUser() {
         User newUser = new User(1, "user@email.ru", "vanya123", "Ivan Petrov", LocalDate.of(1990, 1, 1));
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
         userStorage.add(newUser);
