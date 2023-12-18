@@ -31,14 +31,14 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ErrorResponse handleEmptyResultDataAccessException(EmptyResultDataAccessException e){
+    public ErrorResponse handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.warn("Ошибка id: " + e.getMessage());
         return new ErrorResponse("IdNotFound error", e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(SQLException.class)
-    public ErrorResponse handleJDBCException(SQLException e){
+    public ErrorResponse handleJDBCException(SQLException e) {
         log.warn("Ошибка бд: " + e.getMessage());
         return new ErrorResponse("DB error", e.getMessage());
     }
