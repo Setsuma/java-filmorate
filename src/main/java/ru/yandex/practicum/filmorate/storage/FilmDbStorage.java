@@ -34,7 +34,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public void remove(Film film) {
-        if (jdbcTemplate.update("DELETE FROM films WHERE id = ?", film.getId()) == 0) throw new EmptyResultDataAccessException(1);
+        if (jdbcTemplate.update("DELETE FROM films WHERE id = ?", film.getId()) == 0)
+            throw new EmptyResultDataAccessException(1);
     }
 
     @Override

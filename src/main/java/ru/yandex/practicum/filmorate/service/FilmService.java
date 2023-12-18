@@ -53,7 +53,7 @@ public class FilmService {
         log.info("получен запрос на получение топ " + count + " фильмов");
         List<Film> films = likesDao.getPopularFilmsIds(count).stream().map(filmStorage::getById).collect(Collectors.toList());
         int id = 1;
-        while (films.size() < count && id <= filmStorage.getAll().size()){
+        while (films.size() < count && id <= filmStorage.getAll().size()) {
             films.add(filmStorage.getById(id++));
         }
         return films;

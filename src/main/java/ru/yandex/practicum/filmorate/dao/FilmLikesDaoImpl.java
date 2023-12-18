@@ -23,7 +23,8 @@ public class FilmLikesDaoImpl implements FilmLikesDao {
 
     @Override
     public void removeLike(int filmId, int userId) {
-        if(jdbcTemplate.update("DELETE FROM film_likes WHERE film_id = ? AND user_id = ?", filmId, userId) == 0) throw new IdNotFoundException("ошибка введенных id");
+        if (jdbcTemplate.update("DELETE FROM film_likes WHERE film_id = ? AND user_id = ?", filmId, userId) == 0)
+            throw new IdNotFoundException("ошибка введенных id");
     }
 
     @Override

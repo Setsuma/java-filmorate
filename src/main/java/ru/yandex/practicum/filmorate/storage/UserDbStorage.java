@@ -29,7 +29,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void remove(User user) {
-        if (jdbcTemplate.update("DELETE FROM users WHERE id = ?", user.getId()) == 0) throw new EmptyResultDataAccessException(1);
+        if (jdbcTemplate.update("DELETE FROM users WHERE id = ?", user.getId()) == 0)
+            throw new EmptyResultDataAccessException(1);
     }
 
     @Override
