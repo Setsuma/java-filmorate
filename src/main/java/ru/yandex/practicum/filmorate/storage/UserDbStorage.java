@@ -51,7 +51,7 @@ public class UserDbStorage implements UserStorage {
         return jdbcTemplate.query("SELECT * FROM users", getUserMapper());
     }
 
-    private static RowMapper<User> getUserMapper() {
+    public static RowMapper<User> getUserMapper() {
         return (rs, rowNum) -> new User(
                 rs.getInt("User_id"),
                 rs.getString("login"),

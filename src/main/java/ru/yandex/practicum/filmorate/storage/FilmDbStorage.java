@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.GenreDaoImpl;
@@ -51,24 +52,22 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getById(int id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM films WHERE film_id = ?", (rs, rowNum) -> new Film(rs.getInt("film_id"),
-                rs.getString("name"),
-                rs.getString("description"),
-                rs.getDate("release_date").toLocalDate(),
-                rs.getInt("duration"),
-                mpaDaoImpl.getMpaById(rs.getInt("mpa_id")),
-                new HashSet<>(genreDaoImpl.getFilmGenres(rs.getInt("film_id")))), id);
+        return jdbcTemplate.queryForObject("SELECT * FROM films WHERE film_id = ?", getFilmMapper(), id);
     }
 
     @Override
     public Collection<Film> getAll() {
-        return jdbcTemplate.query("SELECT * FROM films", (rs, rowNum) -> new Film(rs.getInt("film_id"),
+        return jdbcTemplate.query("SELECT * FROM films", getFilmMapper());
+    }
+
+    public RowMapper<Film> getFilmMapper() {
+        return (rs, rowNum) -> new Film(rs.getInt("film_id"),
                 rs.getString("name"),
                 rs.getString("description"),
                 rs.getDate("release_date").toLocalDate(),
                 rs.getInt("duration"),
                 mpaDaoImpl.getMpaById(rs.getInt("mpa_id")),
-                new HashSet<>(genreDaoImpl.getFilmGenres(rs.getInt("film_id")))));
+                new HashSet<>(genreDaoImpl.getFilmGenres(rs.getInt("film_id"))));
     }
 
     private static Map<String, Object> filmToMap(Film film) {

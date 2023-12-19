@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -45,11 +44,11 @@ public class UserService {
 
     public Collection<User> getFriends(int id) {
         log.info("Получен запрос на получение списка друзей");
-        return friendRelationshipDaoImpl.getFriendsIds(id).stream().map(userStorage::getById).collect(Collectors.toList());
+        return friendRelationshipDaoImpl.getFriends(id);
     }
 
     public Collection<User> getCommonFriends(int id, int otherId) {
         log.info("Получен запрос на получение списка общих друзей");
-        return friendRelationshipDaoImpl.getCommonFriendsIds(id, otherId).stream().map(userStorage::getById).collect(Collectors.toList());
+        return friendRelationshipDaoImpl.getCommonFriends(id, otherId);
     }
 }

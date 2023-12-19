@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,7 +21,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @JdbcTest
@@ -50,6 +51,70 @@ class FilmDbStorageTest {
                 .isNotNull()
                 .usingRecursiveComparison()
                 .isEqualTo(newFilm);
+    }
+
+    @Test
+    public void testAddFilmWithLongDescription() {
+        String longDescription = "е".repeat(201);
+        Film newFilm = new Film(1, "Interstellar", longDescription, LocalDate.of(1895, 12, 29), 120, new Mpa(1, "G"), new HashSet<>());
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            filmStorage.add(newFilm);
+        });
+    }
+
+    @Test
+    public void testAddFilmWithMaxLengthDescription() {
+        String longDescription = "е".repeat(200);
+        Film newFilm = new Film(1, "Interstellar", longDescription, LocalDate.of(1895, 12, 29), 120, new Mpa(1, "G"), new HashSet<>());
+        filmStorage.add(newFilm);
+
+        Film savedFilm = filmStorage.getById(1);
+
+        assertThat(savedFilm)
+                .isNotNull()
+                .usingRecursiveComparison()
+                .isEqualTo(newFilm);
+    }
+
+    @Test
+    public void testAddFilmWithInvalidDate() {
+        Film newFilm = new Film(1, "Interstellar", "A fantastic film", LocalDate.of(1895, 12, 27), 120, new Mpa(1, "G"), new HashSet<>());
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            filmStorage.add(newFilm);
+        });
+    }
+
+    @Test
+    public void testAddFilmWithCinemaBirthDate() {
+        Film newFilm = new Film(1, "Interstellar", "A fantastic film", LocalDate.of(1895, 12, 28), 120, new Mpa(1, "G"), new HashSet<>());
+        filmStorage.add(newFilm);
+
+        Film savedFilm = filmStorage.getById(1);
+
+        assertThat(savedFilm)
+                .isNotNull()
+                .usingRecursiveComparison()
+                .isEqualTo(newFilm);
+    }
+
+    @Test
+    public void testAddFilmWithNegativeDuration() {
+        Film newFilm = new Film(1, "Interstellar", "A fantastic film", LocalDate.of(1895, 12, 27), -1, new Mpa(1, "G"), new HashSet<>());
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            filmStorage.add(newFilm);
+        });
+    }
+
+    @Test
+    public void testAddFilmWithZeroDuration() {
+        Film newFilm = new Film(1, "Interstellar", "A fantastic film", LocalDate.of(1895, 12, 27), 0, new Mpa(1, "G"), new HashSet<>());
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            filmStorage.add(newFilm);
+        });
     }
 
     @Test

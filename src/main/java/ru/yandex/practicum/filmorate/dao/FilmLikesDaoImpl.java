@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 
 import java.util.Collection;
 import java.util.Map;
@@ -13,6 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FilmLikesDaoImpl implements FilmLikesDao {
     private final JdbcTemplate jdbcTemplate;
+    private final FilmDbStorage filmStorage;
 
     @Override
     public void addLike(int filmId, int userId) {
@@ -28,7 +31,7 @@ public class FilmLikesDaoImpl implements FilmLikesDao {
     }
 
     @Override
-    public Collection<Integer> getPopularFilmsIds(int count) {
-        return jdbcTemplate.query("SELECT film_id FROM film_likes GROUP BY film_id ORDER BY COUNT(*) LIMIT ?", (rs, rowNum) -> rs.getInt("film_id"), count);
+    public Collection<Film> getPopularFilms(int count) {
+        return jdbcTemplate.query("SELECT * FROM films WHERE film_id = (SELECT film_id FROM film_likes GROUP BY film_id ORDER BY COUNT(*) LIMIT ?)", filmStorage.getFilmMapper(), count);
     }
 }
