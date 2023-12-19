@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 
 @WebMvcTest(FilmController.class)
 public class FilmControllerValidationTest {
@@ -19,7 +19,7 @@ public class FilmControllerValidationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private InMemoryFilmStorage filmStorage;
+    private FilmDbStorage filmStorage;
     @MockBean
     private FilmService filmService;
 

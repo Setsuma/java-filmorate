@@ -1,14 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
-import ru.yandex.practicum.filmorate.model.validators.MinimumDate;
+import lombok.*;
+import ru.yandex.practicum.filmorate.model.validator.MinimumDate;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Film {
     private int id;
     @NotEmpty(message = "имя не может быть пустым")
@@ -19,5 +25,6 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "длительность фильма должна быть положительной")
     private int duration;
-    private final Set<Integer> usersWhoLikedFilmIds = new HashSet<>();
+    private Mpa mpa;
+    private Set<Genre> genres = new HashSet<>();
 }

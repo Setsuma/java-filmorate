@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
 import java.time.LocalDate;
 
@@ -21,7 +21,7 @@ public class UserControllerValidationTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private InMemoryUserStorage userStorage;
+    private UserDbStorage userStorage;
     @MockBean
     private UserService userService;
 

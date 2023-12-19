@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.Email;
@@ -8,10 +8,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private int id;
     @NotEmpty(message = "логин не может быть пустым")
@@ -24,5 +26,4 @@ public class User {
     private String email;
     @PastOrPresent(message = "дата рождения не может быть в будущем")
     private LocalDate birthday;
-    private final Set<Integer> friendsId = new HashSet<>();
 }

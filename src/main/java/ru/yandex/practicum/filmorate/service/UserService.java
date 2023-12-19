@@ -3,17 +3,18 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.FriendRelationshipDaoImpl;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
-    private final InMemoryUserStorage userStorage;
+    private final UserDbStorage userStorage;
+    private final FriendRelationshipDaoImpl friendRelationshipDaoImpl;
 
     public User addUser(User user) {
         return userStorage.add(user);
@@ -32,37 +33,22 @@ public class UserService {
     }
 
     public void addFriend(int id, int friendId) {
-        userStorage.getById(friendId);
-
-        userStorage.getById(id).getFriendsId().add(friendId);
-        userStorage.getById(friendId).getFriendsId().add(id);
+        friendRelationshipDaoImpl.addFriend(id, friendId);
         log.info("Пользователь с id: " + id + "добавил в друзья пользователя с id: " + friendId);
     }
 
     public void deleteFriend(int id, int friendId) {
-        userStorage.getById(friendId);
-
-        userStorage.getById(id).getFriendsId().remove(friendId);
-        userStorage.getById(friendId).getFriendsId().remove(id);
+        friendRelationshipDaoImpl.deleteFriend(id, friendId);
         log.info("Пользователь с id: " + id + "удалил из друзей пользователя с id: " + friendId);
     }
 
     public Collection<User> getFriends(int id) {
         log.info("Получен запрос на получение списка друзей");
-
-        return userStorage.getById(id).getFriendsId().stream()
-                .map(userStorage::getById)
-                .collect(Collectors.toList());
+        return friendRelationshipDaoImpl.getFriends(id);
     }
 
     public Collection<User> getCommonFriends(int id, int otherId) {
         log.info("Получен запрос на получение списка общих друзей");
-
-        Set<Integer> commonFriendIds = new TreeSet<>(userStorage.getById(id).getFriendsId());
-        commonFriendIds.retainAll(userStorage.getById(otherId).getFriendsId());
-
-        return commonFriendIds.stream()
-                .map(userStorage::getById)
-                .collect(Collectors.toList());
+        return friendRelationshipDaoImpl.getCommonFriends(id, otherId);
     }
 }

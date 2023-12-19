@@ -3,19 +3,18 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.FilmLikesDaoImpl;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class FilmService {
-    private final InMemoryFilmStorage filmStorage;
-    private final InMemoryUserStorage userStorage;
+    private final FilmDbStorage filmStorage;
+    private final FilmLikesDaoImpl likesDao;
 
     public Film addFilm(Film film) {
         return filmStorage.add(film);
@@ -34,23 +33,22 @@ public class FilmService {
     }
 
     public void likeFilm(int filmId, int userId) {
-        userStorage.getById(userId);
-        filmStorage.getById(filmId).getUsersWhoLikedFilmIds().add(userId);
+        likesDao.addLike(filmId, userId);
         log.info("Поставлен лайк фильму с id: " + filmId + " пользователем с id: " + userId);
     }
 
     public void unlikeFilm(int filmId, int userId) {
-        userStorage.getById(userId);
-        filmStorage.getById(filmId).getUsersWhoLikedFilmIds().remove(userId);
+        likesDao.removeLike(filmId, userId);
         log.info("Убран лайк фильму с id: " + filmId + " пользователем с id: " + userId);
     }
 
     public Collection<Film> getPopularFilms(int count) {
         log.info("получен запрос на получение топ " + count + " фильмов");
-
-        return filmStorage.getAll().stream()
-                .sorted((o1, o2) -> o2.getUsersWhoLikedFilmIds().size() - o1.getUsersWhoLikedFilmIds().size())
-                .limit(Math.min(count, getAllFilms().size()))
-                .collect(Collectors.toList());
+        Collection<Film> films = likesDao.getPopularFilms(count);
+        int id = 1;
+        while (films.size() < count && id <= filmStorage.getAll().size()) {
+            films.add(filmStorage.getById(id++));
+        }
+        return films;
     }
 }
