@@ -32,6 +32,6 @@ public class FilmLikesDaoImpl implements FilmLikesDao {
 
     @Override
     public Collection<Film> getPopularFilms(int count) {
-        return jdbcTemplate.query("SELECT * FROM films WHERE film_id = (SELECT film_id FROM film_likes GROUP BY film_id ORDER BY COUNT(*) LIMIT ?)", filmStorage.getFilmMapper(), count);
+        return jdbcTemplate.query("SELECT * FROM films WHERE film_id IN (SELECT film_id FROM film_likes GROUP BY film_id ORDER BY COUNT(*) LIMIT ?)", filmStorage.getFilmMapper(), count);
     }
 }
